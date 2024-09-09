@@ -9,4 +9,5 @@ with gr.Blocks() as demo:
     with gr.Row():
         videogallery(value=example, label="Populated"),  # populated component
 
-demo.launch()
+if __name__ == "__main__":
+	demo.launch()
