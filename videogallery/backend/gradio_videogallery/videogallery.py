@@ -225,6 +225,7 @@ class videogallery(Component):
             elif isinstance(media, Path):
                 file_path = str(media)
                 orig_name = media.name
+                mime_type = get_mimetype(file_path)
             else:
                 raise ValueError(f"Cannot process type as image: {type(media)}")
             return GalleryImage(

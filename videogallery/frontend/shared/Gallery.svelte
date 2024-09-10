@@ -281,19 +281,19 @@
 					{/if}
 				</div>
 				{#if selected_media.image.mime_type === "video/mp4"}
-						<video
-							class="detailed-video"
-							data-testid="detailed-video"
-							controls
-							src={selected_media.image.path}
-							title={selected_media.image.alt_text}
-							preload="auto"
-							on:play
-							on:pause
-							on:ended
-						>
-							<track kind="captions" />
-						</video>
+					<video
+						class="detailed-video"
+						data-testid="detailed-video"
+						controls
+						src={selected_media.image.url}
+						title={selected_media.image.alt_text}
+						preload="auto"
+						on:play
+						on:pause
+						on:ended
+					>
+						<track kind="captions" />
+					</video>
 				{:else}
 					<button
 						class="image-button"
@@ -329,23 +329,33 @@
 							on:click={() => (selected_index = i)}
 							class="thumbnail-item thumbnail-small"
 							class:selected={selected_index === i && mode !== "minimal"}
-							aria-label={"Thumbnail " +
-								(i + 1) +
-								" of " +
-								resolved_value.length}
+							aria-label={"Thumbnail " + (i + 1) + " of " + resolved_value.length}
 						>
-							<Image
-								src={media.image.url}
-								title={media.caption || null}
-								data-testid={"thumbnail " + (i + 1)}
-								alt=""
-								loading="lazy"
-							/>
-						</button>
-					{/each}
-				</div>
-			</button>
-		{/if}
+							{#if media.image.mime_type === "video/mp4"}
+								<video
+									data-testid={"thumbnail " + (i + 1)}
+									src={media.image.url}
+									title={media.caption || null}
+									loop=false
+
+								>
+									<track kind="captions" />
+								</video>
+							{:else}
+								<Image
+									src={media.image.url}
+									title={media.caption || null}
+									data-testid={"thumbnail " + (i + 1)}
+									alt=""
+									loading="lazy"
+								/>
+							{/if}
+
+					</button>
+				{/each}
+			</div>
+		</button>
+	{/if}
 
 		<div
 			class="grid-wrap"
@@ -391,7 +401,9 @@
 								class="detailed-video"
 								data-testid="detailed-video"
 								controls
-								src={entry.image.path}
+							src={typeof entry.image === "string"
+								? entry.image
+								: entry.image.url}
 								title={entry.image.alt_text}
 								preload="auto"
 								on:play
